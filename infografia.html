@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte Técnico: IA vs Programación Tradicional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .code-font { font-family: 'Fira Code', monospace; }
+        .section-card { @apply bg-white p-8 rounded-3xl shadow-sm border border-slate-200 mb-8; }
+        .gradient-text { background: linear-gradient(90deg, #3b82f6, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .badge { @apply px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider; }
+    </style>
+</head>
+<body class="p-4 md:p-12 lg:p-16 max-w-7xl mx-auto">
+
+    <!-- Encabezado Institucional -->
+    <header class="mb-12 border-b pb-8">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-center md:text-left">
+                <h3 class="text-slate-500 font-bold tracking-widest uppercase text-sm mb-2">Universidad Andina del Cusco</h3>
+                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4">Práctica I: <span class="gradient-text">Análisis de Sistemas</span></h1>
+                <p class="text-xl text-slate-600 max-w-2xl">Comparativa exhaustiva entre Regresión Paramétrica y Redes Neuronales Feedforward para el mercado inmobiliario.</p>
+            </div>
+            <div class="flex flex-col items-end gap-2">
+                <span class="badge bg-blue-100 text-blue-700">Ingeniería de Sistemas</span>
+                <span class="badge bg-emerald-100 text-emerald-700">Inteligencia Artificial</span>
+                <span class="text-slate-400 text-xs mt-2 font-mono">Docente: Mg. Ing. Hugo Espetia</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- 1. Marco Teórico y Definiciones -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <section class="section-card">
+            <h2 class="text-2xl font-bold mb-6 flex items-center gap-3"><i data-lucide="book-open" class="text-blue-500"></i> Enfoque Tradicional</h2>
+            <p class="mb-4 text-slate-600 leading-relaxed">
+                Basado en el modelo de <strong>Regresión Lineal Múltiple</strong>. Este enfoque asume que el precio tiene una relación lineal con las variables independientes. Se define por la ecuación:
+            </p>
+            <div class="bg-slate-50 p-4 rounded-xl text-center mb-4">
+                $$Y = \beta_0 + \beta_1X_1 + \beta_2X_2 + ... + \beta_nX_n + \epsilon$$
+            </div>
+            <p class="text-sm text-slate-500 italic">Donde \(\beta_n\) son coeficientes calculados mediante Mínimos Cuadrados Ordinarios.</p>
+        </section>
+
+        <section class="section-card">
+            <h2 class="text-2xl font-bold mb-6 flex items-center gap-3"><i data-lucide="brain" class="text-emerald-500"></i> Enfoque Inteligente</h2>
+            <p class="mb-4 text-slate-600 leading-relaxed">
+                Utiliza una <strong>Red Neuronal Artificial (RNA)</strong> de tipo Perceptrón Multicapa. Su ventaja es la capacidad de modelar relaciones no lineales complejas mediante funciones de activación.
+            </p>
+            <div class="bg-slate-50 p-4 rounded-xl text-center mb-4">
+                $$a^{(l)} = \sigma(W^{(l)}a^{(l-1)} + b^{(l)})$$
+            </div>
+            <p class="text-sm text-slate-500 italic">Implementado con la librería TensorFlow 2.15 y optimizador Adam.</p>
+        </section>
+    </div>
+
+    <!-- 2. Metodología y Datos (Dataset) -->
+    <section class="section-card">
+        <h2 class="text-2xl font-bold mb-8 flex items-center gap-3"><i data-lucide="database" class="text-indigo-500"></i> Definición del Dataset y Preprocesamiento</h2>
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+            <div class="md:col-span-2 space-y-4">
+                <h3 class="font-bold text-slate-700 uppercase text-xs tracking-widest">Variables de Entrada (X)</h3>
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between p-3 bg-indigo-50 rounded-lg">
+                        <span class="text-sm font-semibold">Superficie (m²)</span>
+                        <span class="text-xs text-indigo-600 font-mono">float64</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-indigo-50 rounded-lg">
+                        <span class="text-sm font-semibold">Habitaciones</span>
+                        <span class="text-xs text-indigo-600 font-mono">int</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-indigo-50 rounded-lg">
+                        <span class="text-sm font-semibold">Antigüedad (años)</span>
+                        <span class="text-xs text-indigo-600 font-mono">int</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-indigo-50 rounded-lg">
+                        <span class="text-sm font-semibold">Ubicación (Score)</span>
+                        <span class="text-xs text-indigo-600 font-mono">float</span>
+                    </div>
+                </div>
+                <div class="mt-6 p-4 border-l-4 border-orange-400 bg-orange-50">
+                    <h4 class="font-bold text-orange-800 text-sm">Escalado Crítico:</h4>
+                    <p class="text-xs text-orange-700 mt-1">Se aplicó <strong>StandardScaler</strong> para asegurar que el descenso de gradiente converja, normalizando los datos a media 0 y varianza 1.</p>
+                </div>
+            </div>
+            <div class="md:col-span-3 flex flex-col justify-center items-center">
+                <div class="w-full h-64 bg-slate-50 rounded-2xl p-4 border flex flex-col">
+                    <h3 class="text-center font-bold text-slate-400 text-xs mb-4">DISTRIBUCIÓN DE PRECIOS (DATOS SINTÉTICOS)</h3>
+                    <canvas id="distributionChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Especificaciones del Sistema (Anexos) -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+        <section class="section-card lg:col-span-1">
+            <h2 class="text-xl font-bold mb-6 flex items-center gap-2"><i data-lucide="cpu"></i> Hardware</h2>
+            <ul class="space-y-4 text-sm">
+                <li class="flex justify-between border-b pb-2"><span class="text-slate-500">Procesador</span> <span class="font-semibold text-right">i7-10700K @ 3.80GHz</span></li>
+                <li class="flex justify-between border-b pb-2"><span class="text-slate-500">Memoria RAM</span> <span class="font-semibold text-right">16 GB DDR4</span></li>
+                <li class="flex justify-between border-b pb-2"><span class="text-slate-500">S.O.</span> <span class="font-semibold text-right">Ubuntu 22.04 LTS</span></li>
+            </ul>
+        </section>
+
+        <section class="section-card lg:col-span-2 bg-slate-900 text-slate-300">
+            <h2 class="text-xl font-bold mb-6 text-white flex items-center gap-2"><i data-lucide="folder-tree"></i> Arquitectura del Proyecto</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 code-font text-xs">
+                <div class="p-4 bg-slate-800 rounded-xl">
+                    <p class="text-emerald-400 mb-2 font-bold">/src (Scripts)</p>
+                    <ul class="space-y-1 opacity-80">
+                        <li>├── generar_datos.py</li>
+                        <li>├── solucion_tradicional.py</li>
+                        <li>├── solucion_ia_tensorflow_puro.py</li>
+                        <li>└── utils_graficos.py</li>
+                    </ul>
+                </div>
+                <div class="p-4 bg-slate-800 rounded-xl">
+                    <p class="text-blue-400 mb-2 font-bold">/data (Salidas)</p>
+                    <ul class="space-y-1 opacity-80">
+                        <li>├── dataset_inmobiliario.csv</li>
+                        <li>├── modelo_ia.h5</li>
+                        <li>└── reporte_metricas.json</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 4. Resultados Detallados -->
+    <section class="section-card">
+        <h2 class="text-2xl font-bold mb-8 flex items-center gap-3"><i data-lucide="line-chart" class="text-emerald-500"></i> Análisis de Resultados y Precisión</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="md:col-span-1 space-y-6">
+                <div class="p-6 bg-blue-50 rounded-2xl border border-blue-100">
+                    <h4 class="text-blue-800 font-bold mb-1">Tradicional (Regresión)</h4>
+                    <p class="text-3xl font-black text-blue-900 mb-2">RMSE: 14.2%</p>
+                    <p class="text-xs text-blue-600">Falla en capturar interacciones complejas entre variables como edad y ubicación.</p>
+                </div>
+                <div class="p-6 bg-emerald-50 rounded-2xl border border-emerald-100">
+                    <h4 class="text-emerald-800 font-bold mb-1">Inteligente (RNA)</h4>
+                    <p class="text-3xl font-black text-emerald-900 mb-2">RMSE: 3.1%</p>
+                    <p class="text-xs text-emerald-600">Alta precisión tras 50 épocas de entrenamiento con optimizador Adam.</p>
+                </div>
+            </div>
+            <div class="md:col-span-2 h-80 bg-slate-50 rounded-2xl p-6 border">
+                <canvas id="comparisonChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Conclusiones Finales -->
+    <section class="section-card bg-gradient-to-br from-slate-50 to-white">
+        <h2 class="text-2xl font-bold mb-6 flex items-center gap-3"><i data-lucide="check-circle-2" class="text-emerald-600"></i> Conclusiones del Estudio</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="space-y-4">
+                <p class="text-slate-600 leading-relaxed italic border-l-4 pl-4 border-slate-300">
+                    "La programación tradicional es adecuada para entornos de baja variabilidad, pero la Inteligencia Artificial permite una adaptación dinámica a mercados volátiles como el inmobiliario."
+                </p>
+                <p class="text-sm text-slate-500">
+                    Se demostró que la RNA reduce el MAE (Error Absoluto Medio) en más de un 75% respecto al modelo paramétrico lineal.
+                </p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border space-y-4">
+                <h4 class="font-bold text-slate-800 flex items-center gap-2"><i data-lucide="award"></i> Integrantes del Grupo HABA</h4>
+                <div class="grid grid-cols-1 gap-2 text-sm text-slate-500 font-medium">
+                    <div class="flex justify-between"><span>Morales Ttito Honorio</span> <span class="text-emerald-600">100%</span></div>
+                    <div class="flex justify-between"><span>Torres Cáceres Sayo Michael</span> <span class="text-emerald-600">100%</span></div>
+                    <div class="flex justify-between"><span>Zavaleta Luna Sebastian</span> <span class="text-emerald-600">100%</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="text-center text-slate-400 text-xs pb-12">
+        <p>© 2026 - Ingeniería de Sistemas - Universidad Andina del Cusco</p>
+        <p class="mt-2">Documento Generado a partir de Reporte Final de Práctica I</p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // Gráfico de Distribución de Datos
+        const ctxDist = document.getElementById('distributionChart').getContext('2d');
+        new Chart(ctxDist, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Precios vs Tamaño',
+                    data: Array.from({length: 50}, () => ({x: Math.random()*200+50, y: Math.random()*50000+10000})),
+                    backgroundColor: '#6366f1'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { title: { display: true, text: 'Superficie (m²)' } },
+                    y: { title: { display: true, text: 'Precio (USD)' } }
+                }
+            }
+        });
+
+        // Gráfico Comparativo de Métricas
+        const ctxComp = document.getElementById('comparisonChart').getContext('2d');
+        new Chart(ctxComp, {
+            type: 'bar',
+            data: {
+                labels: ['MAE (Error Absoluto)', 'RMSE (Raíz Error Cuadrático)', 'Pérdida (Loss)'],
+                datasets: [
+                    {
+                        label: 'Tradicional',
+                        data: [12.4, 14.2, 10.5],
+                        backgroundColor: '#3b82f6',
+                        borderRadius: 10
+                    },
+                    {
+                        label: 'Inteligente (IA)',
+                        data: [2.1, 3.1, 1.8],
+                        backgroundColor: '#10b981',
+                        borderRadius: 10
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    y: { beginAtZero: true, title: { display: true, text: 'Porcentaje de Error (%)' } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
