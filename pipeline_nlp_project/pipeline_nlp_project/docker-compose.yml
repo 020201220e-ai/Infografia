@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  pipeline-nlp:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+    volumes:
+      - ./app.py:/app/app.py
+      - ./templates:/app/templates
