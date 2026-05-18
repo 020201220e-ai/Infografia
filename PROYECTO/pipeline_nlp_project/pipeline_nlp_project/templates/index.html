@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pipeline NLP Interactivo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        .step-card {
+            transition: all 0.3s ease;
+        }
+        .step-card:hover {
+            transform: scale(1.02);
+        }
+        .token-chip {
+            display: inline-block;
+            padding: 4px 12px;
+            margin: 3px;
+            border-radius: 20px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .token-chip:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen text-white">
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-10">
+            <h1 class="text-5xl font-bold mb-2 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                <i class="fas fa-brain text-cyan-400 mr-3"></i>Pipeline NLP
+            </h1>
+            <p class="text-slate-400 text-lg">Procesamiento de Lenguaje Natural con spaCy</p>
+        </header>
+
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-slate-800/50 backdrop-blur rounded-2xl p-6 shadow-2xl border border-slate-700">
+                <label class="block text-slate-300 mb-2 font-semibold">Ingresa tu texto en español:</label>
+                <textarea id="inputText" rows="3" 
+                    class="w-full bg-slate-900 border border-slate-600 rounded-xl p-4 text-white placeholder-slate-500 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/50 transition-all"
+                    placeholder="Escribe o pega tu texto aquí..."></textarea>
+                <button onclick="procesarTexto()" 
+                    class="mt-4 w-full bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 text-white font-bold py-3 px-6 rounded-xl transition-all transform hover:scale-105 flex items-center justify-center gap-2">
+                    <i class="fas fa-play"></i> Procesar Texto
+                </button>
+            </div>
+
+            <div id="loading" class="hidden text-center py-10">
+                <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cyan-400"></div>
+                <p class="mt-4 text-slate-400">Procesando texto...</p>
+            </div>
+
+            <div id="resultados" class="hidden space-y-6 mt-8"></div>
+        </div>
+    </div>
+
+    <script>
+        const pasos = [
+            { id: 1, titulo: "Segmentación en Frases", icono: "fa-scissors", color: "from-pink-500 to-rose-500" },
+            { id: 2, titulo: "Tokenización", icono: "fa-cut", color: "from-orange-500 to-amber-500" },
+            { id: 3, titulo: "Lematización", icono: "fa-lemon", color: "from-green-500 to-emerald-500" },
+            { id: 4, titulo: "Etiquetado Gramatical (POS)", icono: "fa-tags", color: "from-cyan-500 to-blue-500" },
+            { id: 5, titulo: "Filtrado de Stopwords", icono: "fa-filter", color: "from-purple-500 to-violet-500" }
+        ];
+
+        async function procesarTexto() {
+            const texto = document.getElementById('inputText').value.trim();
+            if (!texto) {
+                alert("Por favor ingresa un texto");
+                return;
+            }
+
+            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('resultados').classList.add('hidden');
+            document.getElementById('resultados').innerHTML = '';
+
+            try {
+                const response = await fetch('/procesar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ texto })
+                });
+                const data = await response.json();
+                mostrarResultados(data);
+            } catch (error) {
+                alert("Error al procesar: " + error.message);
+            } finally {
+                document.getElementById('loading').classList.add('hidden');
+            }
+        }
+
+        function mostrarResultados(data) {
+            const container = document.getElementById('resultados');
+            container.classList.remove('hidden');
+
+            // Etapa 1
+            const frasesSeparadas = data.etapa1_segmentacion.map(f => f.texto).join(' | ');
+            container.innerHTML += crearTarjeta(pasos[0], `
+                <div class="bg-slate-900/50 rounded-xl p-4 border border-pink-500/30">
+                    <p class="text-slate-200 leading-relaxed">
+                        ${data.etapa1_segmentacion.map((f, i) => `
+                            <span class="${i > 0 ? 'text-pink-400 font-bold mx-2' : 'text-pink-400 font-bold'}">|</span>
+                            <span class="bg-pink-500/10 px-2 py-1 rounded">${f.texto}</span>
+                        `).join('')}
+                        <span class="text-pink-400 font-bold ml-2">|</span>
+                    </p>
+                </div>
+                <div class="mt-3 text-sm text-slate-400">
+                    <span class="text-pink-400 font-semibold">Total de frases:</span> ${data.etapa1_segmentacion.length}
+                </div>
+            `);
+
+            // Etapa 2
+            container.innerHTML += crearTarjeta(pasos[1], `
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    ${data.etapa2_tokenizacion.map(t => `
+                        <div class="token-chip bg-gradient-to-r from-orange-600/30 to-amber-600/30 border border-orange-500/50">
+                            <span class="text-orange-300">${t.token}</span>
+                            <span class="text-xs text-orange-500/70 ml-1">${t.indice}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `);
+
+            // Etapa 3
+            container.innerHTML += crearTarjeta(pasos[2], `
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-green-900/30">
+                            <tr>
+                                <th class="p-3 text-left text-green-400">Token</th>
+                                <th class="p-3 text-left text-green-400">Lema</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.etapa3_lematizacion.map(t => `
+                                <tr class="border-b border-green-900/30 hover:bg-green-900/20">
+                                    <td class="p-3 text-slate-300">${t.token}</td>
+                                    <td class="p-3 text-green-300 font-mono">${t.lema}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `);
+
+            // Etapa 4
+            const posColors = {
+                'NOUN': 'bg-blue-500', 'VERB': 'bg-red-500', 'ADJ': 'bg-yellow-500',
+                'DET': 'bg-purple-500', 'ADP': 'bg-pink-500', 'PRON': 'bg-cyan-500',
+                'AUX': 'bg-green-500', 'PROPN': 'bg-orange-500', 'CCONJ': 'bg-indigo-500',
+                'SCONJ': 'bg-teal-500', 'ADV': 'bg-lime-500'
+            };
+            const correcciones = data.etapa4_pos.filter(t => t.corregido);
+            container.innerHTML += crearTarjeta(pasos[3], `
+                <div class="flex flex-wrap gap-2">
+                    ${data.etapa4_pos.map(t => `
+                        <div class="token-chip ${posColors[t.pos] || 'bg-slate-600'} bg-opacity-20 border ${t.corregido ? 'border-yellow-400' : 'border-white/20'}">
+                            <span class="font-bold">${t.token}</span>
+                            <span class="ml-1 text-xs opacity-80">${t.pos}</span>
+                            ${t.corregido ? '<span class="ml-1 text-xs text-yellow-400">✓</span>' : ''}
+                        </div>
+                    `).join('')}
+                </div>
+                ${correcciones.length > 0 ? `
+                <div class="mt-4 p-3 bg-yellow-900/30 border border-yellow-500/50 rounded-lg">
+                    <h4 class="text-yellow-400 font-semibold text-sm mb-2">
+                        <i class="fas fa-pencil-alt mr-2"></i>Correcciones aplicadas:
+                    </h4>
+                    <div class="flex flex-wrap gap-2">
+                        ${correcciones.map(c => `
+                            <span class="text-sm px-3 py-1 bg-yellow-500/20 text-yellow-300 rounded-lg">
+                                "${c.token}" → <strong>${c.pos}</strong>
+                            </span>
+                        `).join('')}
+                    </div>
+                </div>
+                ` : ''}
+                <div class="mt-4 p-4 bg-slate-800/50 rounded-lg">
+                    <h4 class="text-slate-400 font-semibold mb-2">Leyenda de POS:</h4>
+                    <div class="flex flex-wrap gap-2 text-xs">
+                        ${Object.entries({'NOUN': 'Sustantivo', 'VERB': 'Verbo', 'ADJ': 'Adjetivo', 'DET': 'Determinante', 'ADP': 'Preposición', 'PRON': 'Pronombre', 'AUX': 'Auxiliar', 'PROPN': 'Nombre propio', 'CCONJ': 'Conjunción', 'SCONJ': 'Conjunción sub', 'ADV': 'Adverbio'}).map(([k,v]) => `
+                            <span class="px-2 py-1 rounded ${posColors[k]} bg-opacity-30">${k}: ${v}</span>
+                        `).join('')}
+                    </div>
+                </div>
+            `);
+
+            // Etapa 5
+            const swAdicionales = data.etapa5_stopwords.stopwords_adicionales || [];
+            container.innerHTML += crearTarjeta(pasos[4], `
+                <div class="mb-4 p-3 bg-slate-800/50 rounded-lg text-sm text-slate-400">
+                    <span class="text-slate-300 font-semibold">Total tokens:</span> ${data.etapa5_stopwords.total_tokens} |
+                    <span class="text-red-400">Eliminados:</span> ${data.etapa5_stopwords.stopwords_encontradas.length} |
+                    <span class="text-green-400">Restantes:</span> ${data.etapa5_stopwords.tokens_filtrados.length}
+                </div>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-red-900/20 border border-red-500/30 rounded-lg p-4">
+                        <h4 class="text-red-400 font-bold mb-3">
+                            <i class="fas fa-times-circle mr-2"></i>Stopwords Base (${data.etapa5_stopwords.stopwords_base.length})
+                        </h4>
+                        <div class="flex flex-wrap gap-1 max-h-32 overflow-y-auto">
+                            ${data.etapa5_stopwords.stopwords_base.map(sw => `
+                                <span class="text-xs px-2 py-1 bg-red-500/20 text-red-300 rounded">${sw}</span>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="bg-orange-900/20 border border-orange-500/30 rounded-lg p-4">
+                        <h4 class="text-orange-400 font-bold mb-3">
+                            <i class="fas fa-link mr-2"></i>Conectores Adicionales (${swAdicionales.length})
+                        </h4>
+                        <div class="flex flex-wrap gap-1 max-h-32 overflow-y-auto">
+                            ${swAdicionales.length > 0 ? swAdicionales.map(sw => `
+                                <span class="text-xs px-2 py-1 bg-orange-500/20 text-orange-300 rounded">${sw}</span>
+                            `).join('') : '<span class="text-orange-300/50 text-sm">Sin conectores adicionales</span>'}
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 bg-green-900/20 border border-green-500/30 rounded-lg p-4">
+                    <h4 class="text-green-400 font-bold mb-3">
+                        <i class="fas fa-check-circle mr-2"></i>Tokens Filtrados (${data.etapa5_stopwords.tokens_filtrados.length})
+                    </h4>
+                    <div class="flex flex-wrap gap-1">
+                        ${data.etapa5_stopwords.tokens_filtrados.map(t => `
+                            <span class="text-xs px-2 py-1 bg-green-500/20 text-green-300 rounded">${t.token} <span class="text-green-500/70">(${t.lema})</span></span>
+                        `).join('')}
+                    </div>
+                </div>
+            `);
+
+            // Scroll suave
+            container.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function crearTarjeta(paso, contenido) {
+            return `
+                <div class="step-card animate-fade-in bg-slate-800/50 backdrop-blur rounded-2xl overflow-hidden border border-slate-700 shadow-xl" style="animation-delay: ${paso.id * 0.1}s">
+                    <div class="bg-gradient-to-r ${paso.color} p-4">
+                        <h3 class="text-xl font-bold flex items-center gap-3">
+                            <span class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                                <i class="fas ${paso.icono}"></i>
+                            </span>
+                            Etapa ${paso.id}: ${paso.titulo}
+                        </h3>
+                    </div>
+                    <div class="p-6">
+                        ${contenido}
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

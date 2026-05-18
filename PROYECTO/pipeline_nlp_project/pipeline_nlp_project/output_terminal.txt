@@ -1,0 +1,253 @@
+﻿
+######################################################################
+  PIPELINE NLP - PROCESAMIENTO DE LENGUAJE NATURAL
+  SpaCy - Espa├▒ol (es_core_news_sm)
+######################################################################
+
+======================================================================
+  ETAPA 1: SEGMENTACI├ôN EN FRASES
+======================================================================
+
+Segmentaci├│n basada en conectores discursivos:
+
+  Frase 1: Netflix ha encontrado en el juego del calamar su nuevo fen├│meno mundial
+  Frase 2: ni siquiera en la propia plataforma contaban con ello como seguro que tampoco esperaban recibir multitud de quejas por una escena del cuarto episodio
+  Frase 3: sin embargo han estado r├ípidos para responder a la indignaci├│n del p├║blico y ha introducido un cambio en el equipo
+
+  Total de frases: 3
+
+======================================================================
+  ETAPA 2: TOKENIZACI├ôN
+======================================================================
+
+Tokens generados:
+
+TOKEN                ├ìNDICE    
+------------------------------
+Netflix              1         
+ha                   2         
+encontrado           3         
+en                   4         
+el                   5         
+juego                6         
+del                  7         
+calamar              8         
+su                   9         
+nuevo                10        
+fen├│meno             11        
+mundial              12        
+ni                   13        
+siquiera             14        
+en                   15        
+la                   16        
+propia               17        
+plataforma           18        
+contaban             19        
+con                  20        
+ello                 21        
+como                 22        
+seguro               23        
+que                  24        
+tampoco              25        
+esperaban            26        
+recibir              27        
+multitud             28        
+de                   29        
+quejas               30        
+por                  31        
+una                  32        
+escena               33        
+del                  34        
+cuarto               35        
+episodio             36        
+sin                  37        
+embargo              38        
+han                  39        
+estado               40        
+r├ípidos              41        
+para                 42        
+responder            43        
+a                    44        
+la                   45        
+indignaci├│n          46        
+del                  47        
+p├║blico              48        
+y                    49        
+ha                   50        
+introducido          51        
+un                   52        
+cambio               53        
+en                   54        
+el                   55        
+equipo               56        
+
+======================================================================
+  ETAPA 3: LEMATIZACI├ôN
+======================================================================
+
+Lemas de cada token:
+
+TOKEN                LEMA                
+----------------------------------------
+Netflix              Netflix             
+ha                   haber               
+encontrado           encontrar           
+en                   en                  
+el                   el                  
+juego                juego               
+del                  del                 
+calamar              calamar             
+su                   su                  
+nuevo                nuevo               
+fen├│meno             fen├│meno            
+mundial              mundial             
+ni                   ni                  
+siquiera             siquiera            
+en                   en                  
+la                   el                  
+propia               propio              
+plataforma           plataforma          
+contaban             contar              
+con                  con                 
+ello                 ├®l                  
+como                 como                
+seguro               seguro              
+que                  que                 
+tampoco              tampoco             
+esperaban            esperar             
+recibir              recibir             
+multitud             multitud            
+de                   de                  
+quejas               queja               
+por                  por                 
+una                  uno                 
+escena               escena              
+del                  del                 
+cuarto               cuarto              
+episodio             episodio            
+sin                  sin                 
+embargo              embargo             
+han                  haber               
+estado               estar               
+r├ípidos              r├ípido              
+para                 para                
+responder            responder           
+a                    a                   
+la                   el                  
+indignaci├│n          indignaci├│n         
+del                  del                 
+p├║blico              p├║blico             
+y                    y                   
+ha                   haber               
+introducido          introducir          
+un                   uno                 
+cambio               cambio              
+en                   en                  
+el                   el                  
+equipo               equipo              
+
+======================================================================
+  ETAPA 4: ETIQUETADO GRAMATICAL (POS)
+======================================================================
+
+Categor├¡a gramatical de cada token:
+
+TOKEN           POS        DESCRIPCI├ôN    
+----------------------------------------
+Netflix         PROPN      proper noun    
+ha              AUX        auxiliary      
+encontrado      VERB       verb           
+en              ADP        adposition     
+el              DET        determiner     
+juego           NOUN       noun           
+del             ADP        adposition     
+calamar         NOUN       noun            [CORREGIDO]
+su              DET        determiner     
+nuevo           ADJ        adjective      
+fen├│meno        NOUN       noun           
+mundial         ADJ        adjective      
+ni              CCONJ      coordinating conjunction
+siquiera        NOUN       noun           
+en              ADP        adposition     
+la              DET        determiner     
+propia          DET        determiner     
+plataforma      NOUN       noun           
+contaban        VERB       verb           
+con             ADP        adposition     
+ello            PRON       pronoun        
+como            SCONJ      subordinating conjunction
+seguro          ADJ        adjective      
+que             SCONJ      subordinating conjunction
+tampoco         ADV        adverb         
+esperaban       VERB       verb           
+recibir         VERB       verb           
+multitud        NOUN       noun           
+de              ADP        adposition     
+quejas          NOUN       noun           
+por             ADP        adposition     
+una             DET        determiner     
+escena          NOUN       noun           
+del             ADP        adposition     
+cuarto          ADJ        adjective      
+episodio        NOUN       noun           
+sin             ADP        adposition     
+embargo         NOUN       noun           
+han             AUX        auxiliary      
+estado          AUX        auxiliary      
+r├ípidos         ADJ        adjective      
+para            ADP        adposition     
+responder       VERB       verb           
+a               ADP        adposition     
+la              DET        determiner     
+indignaci├│n     NOUN       noun           
+del             ADP        adposition     
+p├║blico         NOUN       noun           
+y               CCONJ      coordinating conjunction
+ha              AUX        auxiliary      
+introducido     VERB       verb           
+un              DET        determiner     
+cambio          NOUN       noun           
+en              ADP        adposition     
+el              DET        determiner     
+equipo          NOUN       noun           
+
+======================================================================
+  ETAPA 5: FILTRADO DE STOPWORDS
+======================================================================
+
+Stopwords identificadas en el texto: 32
+Tokens restantes (sin stopwords): 24
+
+Stopwords base detectadas: 32
+Stopwords adicionales (conectores): 2
+
+TOKEN                LEMA                
+----------------------------------------
+Netflix              Netflix             
+encontrado           encontrar           
+juego                juego               
+calamar              calamar             
+fen├│meno             fen├│meno            
+mundial              mundial             
+siquiera             siquiera            
+plataforma           plataforma          
+contaban             contar              
+seguro               seguro              
+esperaban            esperar             
+recibir              recibir             
+multitud             multitud            
+quejas               queja               
+escena               escena              
+cuarto               cuarto              
+episodio             episodio            
+r├ípidos              r├ípido              
+responder            responder           
+indignaci├│n          indignaci├│n         
+p├║blico              p├║blico             
+introducido          introducir          
+cambio               cambio              
+equipo               equipo              
+
+======================================================================
+  PROCESAMIENTO COMPLETADO
+======================================================================
